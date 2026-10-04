@@ -27,16 +27,20 @@
 
 <!-- 主导航菜单 -->
 <nav class="nav">
-    <div class="nav-inner">
+    <button class="nav-scroll-btn nav-scroll-left" onclick="scrollNav(-1)" id="navLeftBtn">‹</button>
+    <div class="nav-inner" id="navInner">
         <button class="nav-btn active" data-page="home" onclick="showPage('home')">🏠 首页</button>
         <button class="nav-btn" data-page="assess" onclick="showPage('assess')">📝 水平评估</button>
         <button class="nav-btn" data-page="plan" onclick="showPage('plan')">📋 学习计划</button>
         <button class="nav-btn" data-page="words" onclick="showPage('words')">📖 背单词</button>
         <button class="nav-btn" data-page="quiz" onclick="showPage('quiz')">✍️ 真题刷题</button>
         <button class="nav-btn" data-page="listening" onclick="showPage('listening')">🎧 听力练习</button>
+        <button class="nav-btn" data-page="exam" onclick="showPage('exam')">📝 模拟考试</button>
+        <button class="nav-btn" data-page="guide" onclick="showPage('guide')">📋 考试流程</button>
         <button class="nav-btn" data-page="games" onclick="showPage('games')">🎮 英语小游戏</button>
         <button class="nav-btn" data-page="progress" onclick="showPage('progress')">📊 学习进度</button>
     </div>
+    <button class="nav-scroll-btn nav-scroll-right" onclick="scrollNav(1)" id="navRightBtn">›</button>
 </nav>
 
 <!-- 主内容区 -->
@@ -132,8 +136,10 @@
             <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
                 <label>选择词库：</label>
                 <select id="wordBankSelect" onchange="loadWordBank()" style="padding:8px;border-radius:8px;border:2px solid var(--border);">
-                    <option value="cet4">四级高频词（200词）</option>
-                    <option value="cet6">六级高频词（150词）</option>
+                    <option value="cet4">四级高频词（555词）</option>
+                    <option value="cet4syl">四级考纲词（108词）</option>
+                    <option value="cet6">六级高频词（792词）</option>
+                    <option value="cet6syl">六级考纲词（102词）</option>
                 </select>
                 <label style="margin-left:10px;">显示：</label>
                 <select id="wordViewMode" onchange="updateWordDisplay()" style="padding:8px;border-radius:8px;border:2px solid var(--border);">
@@ -169,6 +175,7 @@
                 <select id="quizExamSelect" onchange="loadQuizQuestions()" style="padding:8px;border-radius:8px;border:2px solid var(--border);">
                     <option value="cet4">四级真题</option>
                     <option value="cet6">六级真题</option>
+                    <option value="common">普通考题（常见好题）</option>
                 </select>
                 <span id="quizProgress" style="margin-left:auto;color:var(--text-light);"></span>
             </div>
@@ -194,6 +201,84 @@
         </div>
     </section>
 
+    <!-- 模拟考试页 -->
+    <section id="page-exam" class="page">
+        <div class="card">
+            <div class="card-title">📝 模拟考试</div>
+            <p style="color:var(--text-light);margin-bottom:16px;">全真模拟四六级考试，限时答题，交卷后自动评分并查看解析。</p>
+            <div id="examConfig" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
+                <label>选择级别：</label>
+                <select id="examLevel" style="padding:8px;border-radius:8px;border:2px solid var(--border);">
+                    <option value="cet4">四级模拟</option>
+                    <option value="cet6">六级模拟</option>
+                </select>
+                <span id="examTimer" style="font-size:24px;font-weight:bold;color:var(--primary);margin-left:auto;display:none;">⏱️ <span id="examTime">120:00</span></span>
+                <button class="btn btn-primary" id="startExamBtn" onclick="startExam()">🚀 开始考试</button>
+                <button class="btn btn-danger" id="submitExamBtn" onclick="submitExam()" style="display:none;">✅ 交卷</button>
+            </div>
+            <div id="examContainer"></div>
+            <div id="examResult" style="margin-top:20px;"></div>
+        </div>
+    </section>
+
+    <!-- 考试流程页 -->
+    <section id="page-guide" class="page">
+        <div class="card">
+            <div class="card-title">📋 四六级考试流程详解</div>
+            <p style="color:var(--text-light);margin-bottom:16px;">了解考试流程，避免临场慌乱，从容应对四六级！</p>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">⏰ 四级考试时间安排（125分钟）</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;margin-bottom:20px;line-height:2;">
+                <div>📍 <b>8:40-9:00</b> 考生入场，试音时间（15分钟）</div>
+                <div>📍 <b>9:00-9:10</b> 发答题卡，条形码粘贴</div>
+                <div>📍 <b>9:10-9:40</b> 作文（30分钟，写作部分）</div>
+                <div>📍 <b>9:40-10:05</b> 听力（25分钟，结束后立即收答题卡1）</div>
+                <div>📍 <b>10:05-11:20</b> 阅读+翻译（75分钟）</div>
+                <div>📍 <b>11:20</b> 考试结束，收答题卡2</div>
+            </div>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">⏰ 六级考试时间安排（130分钟）</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;margin-bottom:20px;line-height:2;">
+                <div>📍 <b>14:40-15:00</b> 考生入场，试音时间（15分钟）</div>
+                <div>📍 <b>15:00-15:10</b> 发答题卡，条形码粘贴</div>
+                <div>📍 <b>15:10-15:40</b> 作文（30分钟，写作部分）</div>
+                <div>📍 <b>15:40-16:10</b> 听力（30分钟，结束后立即收答题卡1）</div>
+                <div>📍 <b>16:10-17:25</b> 阅读+翻译（75分钟）</div>
+                <div>📍 <b>17:25</b> 考试结束，收答题卡2</div>
+            </div>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">📐 四级题型分值分布</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;margin-bottom:20px;line-height:2;">
+                <div>✍️ <b>写作</b>：1篇，106.5分（15%）</div>
+                <div>🎧 <b>听力理解</b>：25题，248.5分（35%）</div>
+                <div>📖 <b>阅读理解</b>：30题，248.5分（35%）</div>
+                <div>🌐 <b>翻译</b>：1段，106.5分（15%）</div>
+                <div style="margin-top:8px;color:var(--primary);font-weight:bold;">总分：710分，及格线：425分</div>
+            </div>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">📐 六级题型分值分布</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;margin-bottom:20px;line-height:2;">
+                <div>✍️ <b>写作</b>：1篇，106.5分（15%）</div>
+                <div>🎧 <b>听力理解</b>：30题，248.5分（35%）</div>
+                <div>📖 <b>阅读理解</b>：30题，248.5分（35%）</div>
+                <div>🌐 <b>翻译</b>：1段，106.5分（15%）</div>
+                <div style="margin-top:8px;color:var(--primary);font-weight:bold;">总分：710分，及格线：425分</div>
+            </div>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">💡 考试注意事项</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;line-height:2;">
+                <div>1️⃣ 提前30分钟到达考场，带好<b>准考证、身份证、学生证</b></div>
+                <div>2️⃣ 自备<b>2B铅笔、黑色签字笔、橡皮</b>，听力需自备<b>调频耳机</b></div>
+                <div>3️⃣ 作文和听力在<b>答题卡1</b>上作答，听力结束后立即回收</div>
+                <div>4️⃣ 阅读和翻译在<b>答题卡2</b>上作答</div>
+                <div>5️⃣ 听力开始前快速浏览选项，边听边涂卡</div>
+                <div>6️⃣ 合理分配时间，阅读建议：选词填空7分钟、匹配15分钟、仔细阅读18分钟</div>
+                <div>7️⃣ 翻译注意中国特色词汇的表达，如春节、长城、京剧等</div>
+                <div>8️⃣ 考试结束前5分钟检查答题卡是否填涂完整</div>
+            </div>
+        </div>
+    </section>
+
     <!-- 小游戏页 -->
     <section id="page-games" class="page">
         <div class="card">
@@ -214,6 +299,41 @@
                     <div class="feature-icon">🎯</div>
                     <div class="feature-title">词义选择</div>
                     <div class="feature-desc">看单词，选择正确的中文释义</div>
+                </div>
+                <div class="feature-card" onclick="startGame('decrypt')">
+                    <div class="feature-icon">🔓</div>
+                    <div class="feature-title">单词解密</div>
+                    <div class="feature-desc">把打乱的字母重新排列成正确单词</div>
+                </div>
+                <div class="feature-card" onclick="startGame('sentence')">
+                    <div class="feature-icon">🧩</div>
+                    <div class="feature-title">句子排序</div>
+                    <div class="feature-desc">按正确顺序点击单词，组成完整句子</div>
+                </div>
+                <div class="feature-card" onclick="startGame('riddle')">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-title">英语谜语</div>
+                    <div class="feature-desc">猜猜趣味英语谜语的答案</div>
+                </div>
+                <div class="feature-card" onclick="startGame('match3')">
+                    <div class="feature-icon">💎</div>
+                    <div class="feature-title">单词消消乐</div>
+                    <div class="feature-desc">交换相邻单词，三个连成线即可消除</div>
+                </div>
+                <div class="feature-card" onclick="startGame('grass')">
+                    <div class="feature-icon">⚔️</div>
+                    <div class="feature-title">单词割草</div>
+                    <div class="feature-desc">肉鸽风格，走位击杀单词怪物</div>
+                </div>
+                <div class="feature-card" onclick="startGame('racing')">
+                    <div class="feature-icon">🏎️</div>
+                    <div class="feature-title">单词赛车</div>
+                    <div class="feature-desc">按词性选择岔路，选错或超时即失败</div>
+                </div>
+                <div class="feature-card" onclick="startGame('cat')">
+                    <div class="feature-icon">🐱</div>
+                    <div class="feature-title">喂养小猫</div>
+                    <div class="feature-desc">用单词照顾小猫，处理各种生活事件</div>
                 </div>
             </div>
             <div id="gameContainer"></div>

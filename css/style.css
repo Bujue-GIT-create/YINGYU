@@ -96,15 +96,38 @@ body {
     top: 56px;
     z-index: 99;
     box-shadow: var(--shadow);
+    display: flex;
+    align-items: stretch;
+}
+
+.nav-scroll-btn {
+    flex-shrink: 0;
+    width: 36px;
+    border: none;
+    background: var(--primary);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    line-height: 1;
+}
+
+.nav-scroll-btn:hover {
+    background: var(--primary-dark);
 }
 
 .nav-inner {
-    max-width: 1200px;
-    margin: 0 auto;
+    flex: 1;
+    min-width: 0;
     display: flex;
     overflow-x: auto;
-    padding: 0 10px;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
 .nav-inner::-webkit-scrollbar {
@@ -209,6 +232,15 @@ body {
 .btn-success {
     background: var(--success);
     color: white;
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
 }
 
 .btn-outline {
